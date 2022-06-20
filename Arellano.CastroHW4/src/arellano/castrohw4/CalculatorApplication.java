@@ -30,15 +30,20 @@ public class CalculatorApplication extends Application {
         GridPane primaryPane = new GridPane();
 
         //HBox and VBox
-        HBox calcHBox = new HBox();
+        VBox grpCalcVB = new VBox();
+        HBox calcHB = new HBox();
         HBox rowOneHB = new HBox();
         HBox rowTwoHB = new HBox();
         HBox rowThreeHB = new HBox();
         HBox rowFourHB = new HBox();
+        HBox trinketButtHB = new HBox();
+        VBox trinketVB = new VBox();
 
         //Nodes
         TextField txtCalc = new TextField();
+        TextField txtTrinket = new TextField();
         txtCalc.setEditable(false);//To make text field uneditable
+        txtTrinket.setEditable(false);
 
         Button btnZero = new Button("0");
         btnZero.setUserData(0); //To store in object in the button
@@ -59,35 +64,98 @@ public class CalculatorApplication extends Application {
         Button btnSave = new Button("Save");
         Button btnLoad = new Button("Load");
 
-        primaryPane.add(calcHBox, 0, 0);
-        primaryPane.add(rowOneHB, 0, 1);
-        primaryPane.add(rowTwoHB, 0, 2);
-        primaryPane.add(rowThreeHB, 0, 3);
-        primaryPane.add(rowFourHB, 0, 4);
+        primaryPane.add(grpCalcVB, 0, 0);
+//        primaryPane.add(rowOneHB, 0, 1);
+//        primaryPane.add(rowTwoHB, 0, 2);
+//        primaryPane.add(rowThreeHB, 0, 3);
+//        primaryPane.add(rowFourHB, 0, 4);
+        primaryPane.add(trinketVB, 6, 0);
+
+        grpCalcVB.getChildren().addAll(calcHB, rowOneHB, rowTwoHB, rowThreeHB, rowFourHB);
+        grpCalcVB.setPadding(new Insets(0, 0, 20, 0));
 
         //Row Zero
-        calcHBox.getChildren().addAll(txtCalc);
         txtCalc.setPrefWidth(200);
-        txtCalc.setPrefHeight(35);
+        txtCalc.setPrefHeight(100);
+        calcHB.getChildren().addAll(txtCalc);
 
         //Row One
         rowOneHB.getChildren().addAll(btnOne, btnTwo, btnThree,
                 btnPlus);
         rowOneHB.setPrefWidth(200);
-        rowOneHB.setPrefHeight(35);
+        rowOneHB.setPrefHeight(100);
+        rowOneHB.setPadding(new Insets(0));
         btnOne.setMaxWidth(Double.MAX_VALUE);
         btnTwo.setMaxWidth(Double.MAX_VALUE);
         btnThree.setMaxWidth(Double.MAX_VALUE);
         btnPlus.setMaxWidth(Double.MAX_VALUE);
+        btnOne.setMaxHeight(Double.MAX_VALUE);
+        btnTwo.setMaxHeight(Double.MAX_VALUE);
+        btnThree.setMaxHeight(Double.MAX_VALUE);
+        btnPlus.setMaxHeight(Double.MAX_VALUE);
         rowOneHB.setHgrow(btnOne, Priority.ALWAYS);
         rowOneHB.setHgrow(btnTwo, Priority.ALWAYS);
         rowOneHB.setHgrow(btnThree, Priority.ALWAYS);
         rowOneHB.setHgrow(btnPlus, Priority.ALWAYS);
 
+        //Row Two
         rowTwoHB.getChildren().addAll(btnFour, btnFive, btnSix, btnMinus);
+        rowTwoHB.setPrefWidth(200);
+        rowTwoHB.setPrefHeight(100);
+        rowTwoHB.setPadding(new Insets(0));
+        btnFour.setMaxWidth(Double.MAX_VALUE);
+        btnFive.setMaxWidth(Double.MAX_VALUE);
+        btnSix.setMaxWidth(Double.MAX_VALUE);
+        btnMinus.setMaxWidth(Double.MAX_VALUE);
+        btnFour.setMaxHeight(Double.MAX_VALUE);
+        btnFive.setMaxHeight(Double.MAX_VALUE);
+        btnSix.setMaxHeight(Double.MAX_VALUE);
+        btnMinus.setMaxHeight(Double.MAX_VALUE);
+        rowTwoHB.setHgrow(btnFour, Priority.ALWAYS);
+        rowTwoHB.setHgrow(btnFive, Priority.ALWAYS);
+        rowTwoHB.setHgrow(btnSix, Priority.ALWAYS);
+        rowTwoHB.setHgrow(btnMinus, Priority.ALWAYS);
+
+        //Row Three
         rowThreeHB.getChildren().addAll(btnSeven, btnEight,
                 btnNine, btnDivide);
+        rowThreeHB.setPrefWidth(200);
+        rowThreeHB.setPrefHeight(105);
+        rowThreeHB.setPadding(new Insets(0));
+        btnSeven.setMaxWidth(Double.MAX_VALUE);
+        btnEight.setMaxWidth(Double.MAX_VALUE);
+        btnNine.setMaxWidth(Double.MAX_VALUE);
+        btnDivide.setMaxWidth(Double.MAX_VALUE);
+        btnSeven.setMaxHeight(Double.MAX_VALUE);
+        btnEight.setMaxHeight(Double.MAX_VALUE);
+        btnNine.setMaxHeight(Double.MAX_VALUE);
+        btnDivide.setMaxHeight(Double.MAX_VALUE);
+        rowThreeHB.setHgrow(btnSeven, Priority.ALWAYS);
+        rowThreeHB.setHgrow(btnEight, Priority.ALWAYS);
+        rowThreeHB.setHgrow(btnNine, Priority.ALWAYS);
+        rowThreeHB.setHgrow(btnDivide, Priority.ALWAYS);
+
+        //Row Four
         rowFourHB.getChildren().addAll(btnZero, btnEqual, btnMultiply);
+        rowFourHB.setPrefWidth(200);
+        rowFourHB.setPrefHeight(100);
+        rowFourHB.setPadding(new Insets(0));
+        btnEqual.setPrefWidth(48.5);
+        btnMultiply.setPrefWidth(48.5);
+        btnZero.setMaxWidth(Double.MAX_VALUE);
+        btnEqual.setMaxWidth(Double.MAX_VALUE);
+        btnMultiply.setMaxWidth(Double.MAX_VALUE);
+        btnZero.setMaxHeight(Double.MAX_VALUE);
+        btnEqual.setMaxHeight(Double.MAX_VALUE);
+        btnMultiply.setMaxHeight(Double.MAX_VALUE);
+        rowFourHB.setHgrow(btnZero, Priority.ALWAYS);
+
+        trinketButtHB.getChildren().addAll(btnSave,btnLoad);
+        trinketVB.getChildren().addAll(txtTrinket,trinketButtHB);
+        
+        //(top/right/bottom/left)
+        trinketVB.setPadding(new Insets(0, 0, 20, 0));
+        txtTrinket.setPrefSize(300, 400);
 
         Scene primaryScene = new Scene(primaryPane, 500, 250);
         primaryStage.setScene(primaryScene);
