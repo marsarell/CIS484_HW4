@@ -16,11 +16,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.*;
 
 /**
- * CIS484 Summer 22 HW 3 Daniella Castro-De La O Mariela Arellano
+ * CIS484 Summer 22
+ * HW 3
+ * Daniella Castro-De La O
+ * Mariela Arellano
  */
 public class CalculatorApplication extends Application {
 
@@ -40,13 +44,13 @@ public class CalculatorApplication extends Application {
         VBox trinketVB = new VBox();
 
         //Nodes
-        TextField txtCalc = new TextField();
+        TextField txtFormula = new TextField();
         TextField txtTrinket = new TextField();
-        txtCalc.setEditable(false);//To make text field uneditable
+        txtFormula.setEditable(false);//To make text field uneditable
+        txtFormula.setAlignment(Pos.CENTER_RIGHT);
         txtTrinket.setEditable(false);
 
         Button btnZero = new Button("0");
-        btnZero.setUserData(0); //To store in object in the button
         Button btnOne = new Button("1");
         Button btnTwo = new Button("2");
         Button btnThree = new Button("3");
@@ -59,25 +63,24 @@ public class CalculatorApplication extends Application {
         Button btnPlus = new Button("+");
         Button btnMinus = new Button("-");
         Button btnDivide = new Button("/");
+
+        //The clear button will clear any calculations in the formula box
+        Button btnClear = new Button("C");
         Button btnMultiply = new Button("*");
         Button btnEqual = new Button("=");
         Button btnSave = new Button("Save");
         Button btnLoad = new Button("Load");
 
         primaryPane.add(grpCalcVB, 0, 0);
-//        primaryPane.add(rowOneHB, 0, 1);
-//        primaryPane.add(rowTwoHB, 0, 2);
-//        primaryPane.add(rowThreeHB, 0, 3);
-//        primaryPane.add(rowFourHB, 0, 4);
         primaryPane.add(trinketVB, 6, 0);
 
         grpCalcVB.getChildren().addAll(calcHB, rowOneHB, rowTwoHB, rowThreeHB, rowFourHB);
         grpCalcVB.setPadding(new Insets(0, 0, 20, 0));
 
         //Row Zero
-        txtCalc.setPrefWidth(200);
-        txtCalc.setPrefHeight(100);
-        calcHB.getChildren().addAll(txtCalc);
+        txtFormula.setPrefWidth(200);
+        txtFormula.setPrefHeight(100);
+        calcHB.getChildren().addAll(txtFormula);
 
         //Row One
         rowOneHB.getChildren().addAll(btnOne, btnTwo, btnThree,
@@ -136,26 +139,42 @@ public class CalculatorApplication extends Application {
         rowThreeHB.setHgrow(btnDivide, Priority.ALWAYS);
 
         //Row Four
-        rowFourHB.getChildren().addAll(btnZero, btnEqual, btnMultiply);
+        rowFourHB.getChildren().addAll(btnZero, btnClear, btnEqual, btnMultiply);
         rowFourHB.setPrefWidth(200);
         rowFourHB.setPrefHeight(100);
         rowFourHB.setPadding(new Insets(0));
-        btnEqual.setPrefWidth(48.5);
-        btnMultiply.setPrefWidth(48.5);
+
         btnZero.setMaxWidth(Double.MAX_VALUE);
+        btnClear.setMaxWidth(Double.MAX_VALUE);
         btnEqual.setMaxWidth(Double.MAX_VALUE);
         btnMultiply.setMaxWidth(Double.MAX_VALUE);
         btnZero.setMaxHeight(Double.MAX_VALUE);
+        btnClear.setMaxHeight(Double.MAX_VALUE);
         btnEqual.setMaxHeight(Double.MAX_VALUE);
         btnMultiply.setMaxHeight(Double.MAX_VALUE);
         rowFourHB.setHgrow(btnZero, Priority.ALWAYS);
+        rowFourHB.setHgrow(btnClear, Priority.ALWAYS);
+        rowFourHB.setHgrow(btnEqual, Priority.ALWAYS);
+        rowFourHB.setHgrow(btnMultiply, Priority.ALWAYS);
 
-        trinketButtHB.getChildren().addAll(btnSave,btnLoad);
-        trinketVB.getChildren().addAll(txtTrinket,trinketButtHB);
-        
+        trinketButtHB.getChildren().addAll(btnSave, btnLoad);
+        trinketVB.getChildren().addAll(txtTrinket, trinketButtHB);
+
         //(top/right/bottom/left)
         trinketVB.setPadding(new Insets(0, 0, 20, 0));
         txtTrinket.setPrefSize(300, 400);
+
+        //To show on Formula Box
+        btnOne.setOnAction(e -> {
+
+            txtFormula.setText("1");
+
+        });
+        btnClear.setOnAction(e -> {
+
+            txtFormula.clear();
+
+        });
 
         Scene primaryScene = new Scene(primaryPane, 500, 250);
         primaryStage.setScene(primaryScene);
