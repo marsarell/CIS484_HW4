@@ -49,10 +49,15 @@ public class CalculatorApplication extends Application {
         txtFormula.setEditable(false);//To make text field uneditable
         txtFormula.setAlignment(Pos.CENTER_RIGHT);
         txtTrinket.setEditable(false);
+        
+        StringBuilder myStringBuilder = new StringBuilder();
 
         Button btnZero = new Button("0");
+        String zero = "";
         Button btnOne = new Button("1");
+        String one = "";
         Button btnTwo = new Button("2");
+        String two = "";
         Button btnThree = new Button("3");
         Button btnFour = new Button("4");
         Button btnFive = new Button("5");
@@ -167,12 +172,29 @@ public class CalculatorApplication extends Application {
         //To show on Formula Box
         btnOne.setOnAction(e -> {
 
-            txtFormula.setText("1");
+            myStringBuilder.append(btnOne.getText());
+            txtFormula.setText(String.valueOf(myStringBuilder));
+            
+
+        });
+          btnTwo.setOnAction(e -> {
+
+            myStringBuilder.append(btnTwo.getText());
+            txtFormula.setText(String.valueOf(myStringBuilder));
+            
+
+        });
+                btnPlus.setOnAction(e -> {
+
+            myStringBuilder.append(btnPlus.getText());
+            txtFormula.setText(String.valueOf(myStringBuilder));
+            
 
         });
         btnClear.setOnAction(e -> {
 
             txtFormula.clear();
+            myStringBuilder.setLength(0);
 
         });
 
