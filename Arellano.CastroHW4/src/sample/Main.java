@@ -29,9 +29,6 @@ public class Main extends Application {
         primaryStage.setTitle("DukeCalc v 0.1");
         EventHandler<ActionEvent> action = actionListener();
         
-        
-       //
-        
         tf = new TextField();
         tf.setEditable(false);
         tf.setMinHeight(50);
