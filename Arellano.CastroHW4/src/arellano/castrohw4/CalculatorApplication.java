@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Stack;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
@@ -15,18 +16,41 @@ import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.*;
 
 /**
- * CIS484 Summer 22
- * HW 3
- * Daniella Castro-De La O
- * Mariela Arellano
+ * CIS484 Summer 22 HW 3 Daniella Castro-De La O Mariela Arellano
  */
-public class CalculatorApplication extends Application {
+public class CalculatorApplication extends Application implements EventHandler<ActionEvent> {
+
+    TextField txtFormula = new TextField();
+    TextArea txtTicker = new TextArea();
+
+    Button btnZero = new Button("0");
+    Button btnOne = new Button("1");
+    Button btnTwo = new Button("2");
+    Button btnThree = new Button("3");
+    Button btnFour = new Button("4");
+    Button btnFive = new Button("5");
+    Button btnSix = new Button("6");
+    Button btnSeven = new Button("7");
+    Button btnEight = new Button("8");
+    Button btnNine = new Button("9");
+    Button btnPlus = new Button("+");
+    Button btnMinus = new Button("-");
+    Button btnDivide = new Button("/");
+    Button btnClear = new Button("C");
+    Button btnMultiply = new Button("*");
+    Button btnEqual = new Button("=");
+    Button btnSave = new Button("Save");
+    Button btnLoad = new Button("Load");
+
+    String formula = " ";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -40,44 +64,36 @@ public class CalculatorApplication extends Application {
         HBox rowTwoHB = new HBox();
         HBox rowThreeHB = new HBox();
         HBox rowFourHB = new HBox();
-        HBox trinketButtHB = new HBox();
-        VBox trinketVB = new VBox();
+        HBox tickerButtHB = new HBox();
+        VBox tickerVB = new VBox();
 
         //Nodes
-        TextField txtFormula = new TextField();
-        TextField txtTrinket = new TextField();
         txtFormula.setEditable(false);//To make text field uneditable
         txtFormula.setAlignment(Pos.CENTER_RIGHT);
-        txtTrinket.setEditable(false);
+        txtTicker.setEditable(false);
         
-        StringBuilder myStringBuilder = new StringBuilder();
-
-        Button btnZero = new Button("0");
-        String zero = "";
-        Button btnOne = new Button("1");
-        String one = "";
-        Button btnTwo = new Button("2");
-        String two = "";
-        Button btnThree = new Button("3");
-        Button btnFour = new Button("4");
-        Button btnFive = new Button("5");
-        Button btnSix = new Button("6");
-        Button btnSeven = new Button("7");
-        Button btnEight = new Button("8");
-        Button btnNine = new Button("9");
-        Button btnPlus = new Button("+");
-        Button btnMinus = new Button("-");
-        Button btnDivide = new Button("/");
-
-        //The clear button will clear any calculations in the formula box
-        Button btnClear = new Button("C");
-        Button btnMultiply = new Button("*");
-        Button btnEqual = new Button("=");
-        Button btnSave = new Button("Save");
-        Button btnLoad = new Button("Load");
+        //Event Handler
+        btnZero.setOnAction(this);
+        btnOne.setOnAction(this);
+        btnTwo.setOnAction(this);
+        btnThree.setOnAction(this);
+        btnFour.setOnAction(this);
+        btnFive.setOnAction(this);
+        btnSix.setOnAction(this);
+        btnSeven.setOnAction(this);
+        btnEight.setOnAction(this);
+        btnNine.setOnAction(this);
+        btnPlus.setOnAction(this);
+        btnMinus.setOnAction(this);
+        btnDivide.setOnAction(this);
+        btnMultiply.setOnAction(this);
+        btnClear.setOnAction(this);
+        btnEqual.setOnAction(this);
+        btnSave.setOnAction(this);
+        btnLoad.setOnAction(this);
 
         primaryPane.add(grpCalcVB, 0, 0);
-        primaryPane.add(trinketVB, 6, 0);
+        primaryPane.add(tickerVB, 6, 0);
 
         grpCalcVB.getChildren().addAll(calcHB, rowOneHB, rowTwoHB, rowThreeHB, rowFourHB);
         grpCalcVB.setPadding(new Insets(0, 0, 20, 0));
@@ -162,39 +178,15 @@ public class CalculatorApplication extends Application {
         rowFourHB.setHgrow(btnEqual, Priority.ALWAYS);
         rowFourHB.setHgrow(btnMultiply, Priority.ALWAYS);
 
-        trinketButtHB.getChildren().addAll(btnSave, btnLoad);
-        trinketVB.getChildren().addAll(txtTrinket, trinketButtHB);
+        tickerButtHB.getChildren().addAll(btnSave, btnLoad);
+        tickerVB.getChildren().addAll(txtTicker, tickerButtHB);
 
-        //(top/right/bottom/left)
-        trinketVB.setPadding(new Insets(0, 0, 20, 0));
-        txtTrinket.setPrefSize(300, 400);
+        tickerVB.setPadding(new Insets(0, 0, 20, 0));
+        txtTicker.setPrefSize(300, 400);
 
-        //To show on Formula Box
-        btnOne.setOnAction(e -> {
-
-            myStringBuilder.append(btnOne.getText());
-            txtFormula.setText(String.valueOf(myStringBuilder));
-            
-
-        });
-          btnTwo.setOnAction(e -> {
-
-            myStringBuilder.append(btnTwo.getText());
-            txtFormula.setText(String.valueOf(myStringBuilder));
-            
-
-        });
-                btnPlus.setOnAction(e -> {
-
-            myStringBuilder.append(btnPlus.getText());
-            txtFormula.setText(String.valueOf(myStringBuilder));
-            
-
-        });
         btnClear.setOnAction(e -> {
-
+            formula = " ";
             txtFormula.clear();
-            myStringBuilder.setLength(0);
 
         });
 
@@ -207,5 +199,158 @@ public class CalculatorApplication extends Application {
     public static void main(String[] args) {
         Application.launch(args);
     }
+
+    @Override
+    public void handle(ActionEvent event) {
+        if (event.getSource() == btnOne) {
+            formula += btnOne.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnTwo) {
+            formula += btnTwo.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnThree) {
+            formula += btnThree.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnFour) {
+            formula += btnFour.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnFive) {
+            formula += btnFive.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnSix) {
+            formula += btnSix.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnSeven) {
+            formula += btnSeven.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnEight) {
+            formula += btnEight.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnNine) {
+            formula += btnNine.getText();
+            txtFormula.setText(formula);
+        } else if (event.getSource() == btnPlus) {
+            if (!(txtFormula.getText().endsWith("+") || txtFormula.getText().endsWith("-")
+                    || txtFormula.getText().endsWith("/") || txtFormula.getText().endsWith("*"))) {
+                formula += btnPlus.getText();
+                txtFormula.setText(formula);
+
+            } else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setAlertType(Alert.AlertType.ERROR);
+                error.setContentText("Cannot enter an operator more than once in a row!");
+                error.show();
+                txtFormula.setText(formula);
+            }
+        } else if (event.getSource() == btnDivide) {
+            if (!(txtFormula.getText().endsWith("+") || txtFormula.getText().endsWith("-")
+                    || txtFormula.getText().endsWith("/") || txtFormula.getText().endsWith("*"))) {
+                formula += btnDivide.getText();
+                txtFormula.setText(formula);
+
+            } else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setAlertType(Alert.AlertType.ERROR);
+                error.setContentText("Cannot enter an operator more than once in a row!");
+                error.show();
+                txtFormula.setText(formula);
+            }
+        } else if (event.getSource() == btnMinus) {
+            if (!(txtFormula.getText().endsWith("+") || txtFormula.getText().endsWith("-")
+                    || txtFormula.getText().endsWith("/") || txtFormula.getText().endsWith("*"))) {
+                formula += btnMinus.getText();
+                txtFormula.setText(formula);
+
+            } else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setAlertType(Alert.AlertType.ERROR);
+                error.setContentText("Cannot enter an operator more than once in a row!");
+                error.show();
+                txtFormula.setText(formula);
+            }
+
+        } else if (event.getSource() == btnMultiply) {
+
+            if (!(txtFormula.getText().endsWith("+") || txtFormula.getText().endsWith("-")
+                    || txtFormula.getText().endsWith("/") || txtFormula.getText().endsWith("*"))) {
+                formula += btnMultiply.getText();
+                txtFormula.setText(formula);
+
+            } else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setAlertType(Alert.AlertType.ERROR);
+                error.setContentText("Cannot enter an operator more than once in a row!");
+                error.show();
+                //formula = txtFormula.getText().substring(0, txtFormula.getText().length() - 1);
+                txtFormula.setText(formula);
+            }
+
+        }else if(event.getSource() == btnEqual){
+            int result = calculate(txtFormula.getText());
+            txtTicker.appendText(txtFormula.getText()+" = "+result);
+            txtTicker.appendText("\n");
+            formula = " ";
+            txtFormula.clear();
+        }
+    }
+     //methods to caluculate: 
+    public static int formula(char operator, int y, int x) {
+        switch (operator) {
+            case '+':
+                return x+y;
+            case '-':
+                return x-y;
+            case '*':
+                return x*y;
+            case '/':
+                return x/y;
+            default:
+                break;
+        }
+        return 0;
+    }  
+    
+    public static boolean isOperator(char operator1, char operator2) {
+        if ((operator1 == '*' || operator1 == '/' || operator1 == '+' || operator1 == '-')  
+                && (operator2 == '*' || operator2 == '/' || operator2 == '+' || operator2 == '-')) {
+            return false;
+        }
+        return true;
+    }
+    
+    //stacking and pushing
+    public static int calculate(String result) {
+        char[] input = result.toCharArray();
+        Stack<Integer> number = new Stack<>();
+        Stack<Character> operators = new Stack<>();
+        for (int i = 0; i < input.length; i++) {
+            if (input[i] == ' ') {
+                continue;
+            }
+            if (input[i] >= '0' && input[i] <= '9') {
+                String s= "";
+                while (i < input.length && input[i] >= '0' && input[i] <= '9') {
+                    s += input[i++];
+                }
+                number.push(Integer.parseInt(s));
+                i--;
+            } else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') {
+                
+                while (!operators.empty() && isOperator(input[i], operators.peek())) {
+                    number.push(formula(operators.pop(), number.pop(), number.pop()));
+                }
+                operators.push(input[i]);
+            }
+        }
+        while (!operators.empty()) {
+            int numOne = number.pop();
+            int numTwo = number.pop();
+            number.push(formula(operators.pop(), numOne, numTwo));
+        }
+        return number.pop();
+    }
+    
+    
+    
 
 }
