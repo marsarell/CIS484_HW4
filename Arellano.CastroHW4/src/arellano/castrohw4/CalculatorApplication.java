@@ -21,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.*;
@@ -46,6 +47,7 @@ public class CalculatorApplication extends Application implements EventHandler<A
     Button btnPlus = new Button("+");
     Button btnMinus = new Button("-");
     Button btnDivide = new Button("/");
+    //we added btnClear button to clear the contents of the formula box
     Button btnClear = new Button("C");
     Button btnMultiply = new Button("*");
     Button btnEqual = new Button("=");
@@ -310,7 +312,6 @@ public class CalculatorApplication extends Application implements EventHandler<A
                 error.setAlertType(Alert.AlertType.ERROR);
                 error.setContentText("Cannot enter an operator more than once in a row!");
                 error.show();
-                //formula = txtFormula.getText().substring(0, txtFormula.getText().length() - 1);
                 txtFormula.setText(formula);
             }
 
@@ -320,6 +321,7 @@ public class CalculatorApplication extends Application implements EventHandler<A
             txtTicker.appendText("\n");
             formula = " ";
             txtFormula.clear();
+        //btnClear when clicked will clear the formula box contents.
         }else if(event.getSource() == btnClear){
              txtFormula.clear();
         }else if(event.getSource() == btnZero){
