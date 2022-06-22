@@ -1,3 +1,12 @@
+/**
+ * CIS484 Summer 22
+ * HW 3
+ * Daniella Castro-De La O
+ * Mariela Arellano
+ */
+
+package arellano_castroHW4;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -117,7 +126,9 @@ public class CalculatorApp extends Application{
         primaryStage.setTitle("DukeCalc v 0.1");
         
         primaryStage.show();
-               
+         
+         
+        //when save button is clicked, ticker box will save onto .dat file 
         btnSave.setOnAction(e -> {
             try {
                 FileOutputStream load = new FileOutputStream("ticker.dat");
@@ -139,6 +150,7 @@ public class CalculatorApp extends Application{
             saveAlert.show();                    
         });
         
+        //when button is clicked, ticker box will load the saved history
         btnLoad.setOnAction(e -> {
             try {
                 FileInputStream fw = new FileInputStream("ticker.dat");
