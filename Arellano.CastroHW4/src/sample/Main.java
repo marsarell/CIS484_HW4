@@ -29,6 +29,9 @@ public class Main extends Application {
         primaryStage.setTitle("DukeCalc v 0.1");
         EventHandler<ActionEvent> action = actionListener();
         
+        
+       //
+        
         tf = new TextField();
         tf.setEditable(false);
         tf.setMinHeight(50);
@@ -145,7 +148,7 @@ public class Main extends Application {
                             }
                         }
                         else{
-                            tf.appendText(b.getText());
+                             
                         }
                     }
                 }
@@ -178,6 +181,8 @@ public class Main extends Application {
         }
     }
     
+    
+    //stacking - 
     public static int evaluate(String str) {
         char[] recs = str.toCharArray();
         Stack<Integer> nums = new Stack<>();
