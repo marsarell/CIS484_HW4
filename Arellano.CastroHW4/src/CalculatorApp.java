@@ -1,5 +1,9 @@
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -115,7 +119,20 @@ public class CalculatorApp extends Application{
         primaryStage.show();
                
         btnSave.setOnAction(e -> {
-            save(ticker.getText());
+            try {
+                FileOutputStream load = new FileOutputStream("ticker.dat");
+                DataOutputStream outputLoad = new DataOutputStream(load);
+
+                outputLoad.writeUTF(ticker.getText());
+                outputLoad.writeUTF("");
+                outputLoad.write('\n');
+
+                outputLoad.close();
+            } catch (Exception ex) {
+                System.out.println("Error:" +ex.getMessage());
+            }
+            
+            //ticker.getText();
             Alert saveAlert = new Alert(Alert.AlertType.INFORMATION);
             saveAlert.setAlertType(Alert.AlertType.INFORMATION);
             saveAlert.setContentText("Saved Successfully!");
@@ -123,9 +140,15 @@ public class CalculatorApp extends Application{
         });
         
         btnLoad.setOnAction(e -> {
-            ticker.setText("");
-            load();
-        });
+            try {
+                FileInputStream fw = new FileInputStream("ticker.dat");
+                DataInputStream pw = new DataInputStream(fw);
+                ticker.setText(pw.readUTF());
+            
+            }catch (Exception ex) {
+                System.out.println("Error:" +ex.getMessage());
+            }
+            });
       
         
         //btnClear when clicked, will clear the contects of the textfield...
@@ -138,13 +161,15 @@ public class CalculatorApp extends Application{
         // "=" button... will operate by solving formulas
         operators[4].setOnAction(e -> {
             
-            int result = calculate(txtFormula.getText().trim());
+            int result = calculate(txtFormula.getText());
             ticker.appendText(txtFormula.getText()+" = "+result);
             ticker.appendText("\n");
             txtFormula.setText("");
                     
         });
         
+        
+        //messed around trying to not use the event handler but doesn't work for me
 //        operators[0].setOnAction(e -> {
 //            
 //            if(tf.getText().endsWith("+ ")){
@@ -186,16 +211,24 @@ public class CalculatorApp extends Application{
 //                }
 //                    
 //        });
+
+
 //        operators[4].setOnAction(e -> {
 //            
-//            if(tf.getText().endsWith("* ")){
-//                    Alert a = new Alert(Alert.AlertType.ERROR);
-//                    a.setAlertType(Alert.AlertType.ERROR);
-//                    a.setContentText("Please Enter a Number!");
-//                    a.show();
+//            if(operators[4].equals("+"))
+//            {
+//                if(txtFormula.getText().endsWith("* ")){
+//                        Alert a = new Alert(Alert.AlertType.ERROR);
+//                        a.setAlertType(Alert.AlertType.ERROR);
+//                        a.setContentText("Please Enter a Number!");
+//                        a.show();
+//                    }
+//                    else{
+//                        txtFormula.appendText(" "+txtFormula.getText()+" ");
+//                    }
 //                }
 //                else{
-//                    tf.appendText(" "+tf.getText()+" ");
+//                    txtFormula.appendText(operators.getText());
 //                }
 //                    
 //        });
@@ -213,10 +246,10 @@ public class CalculatorApp extends Application{
                                  || operators.getText().equals("/") || operators.getText().equals("*")){
                         if(txtFormula.getText().endsWith("+ ") || txtFormula.getText().endsWith("- ") ||
                                 txtFormula.getText().endsWith("/ ") || txtFormula.getText().endsWith("* ")){
-                            Alert missing = new Alert(Alert.AlertType.ERROR);
-                            missing.setAlertType(Alert.AlertType.ERROR);
-                            missing.setContentText("Please Enter a Number!");
-                            missing.show();
+                            Alert error = new Alert(Alert.AlertType.ERROR);
+                            error.setAlertType(Alert.AlertType.ERROR);
+                            error.setContentText("Please Enter a Number!");
+                            error.show();
                         }
                         else{
                             txtFormula.appendText(" "+operators.getText()+" ");
@@ -231,33 +264,7 @@ public class CalculatorApp extends Application{
     }
 
     
-    //****
-    public static void load() {
-        try {
-            Scanner input = new Scanner(new File("ticker.dat"));
-            while(input.hasNextLine()){
-                String line = input.nextLine();
-                ticker.appendText(line);
-                ticker.appendText("\n");
-            }
-            input.close();
-        } catch (Exception ex) {
-            System.out.println("Error:" +ex.getMessage());
-        }
-    }
-    public static void save(String s) {
-        try {
-            //use data output stream instead
-            FileWriter fw = new FileWriter("ticker.dat");
-            PrintWriter pw = new PrintWriter(fw);
-            s = s.substring(0, s.length()-1);
-            pw.println(s);
-            pw.close();
-        } catch (Exception ex) {
-            System.out.println("Error:" +ex.getMessage());
-        }
-    }
-    
+   //methods to caluculate: 
     public static int formula(char operator, int y, int x) {
         if(operator == '+'){
             return x+y;
@@ -274,6 +281,15 @@ public class CalculatorApp extends Application{
         return 0;
     }  
     
+    public static boolean isOperator(char operator1, char operator2) {
+        if ((operator1 == '*' || operator1 == '/' || operator1 == '+' || operator1 == '-')  
+                && (operator2 == '*' || operator2 == '/' || operator2 == '+' || operator2 == '-')) {
+            return false;
+        }
+        return true;
+    }
+    
+    //stacking and pushing
     public static int calculate(String result) {
         char[] input = result.toCharArray();
         Stack<Integer> number = new Stack<>();
@@ -291,13 +307,12 @@ public class CalculatorApp extends Application{
                 i--;
             } else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') {
                 
-                while (!operators.empty() && checkPrec(input[i], operators.peek())) {
+                while (!operators.empty() && isOperator(input[i], operators.peek())) {
                     number.push(formula(operators.pop(), number.pop(), number.pop()));
                 }
                 operators.push(input[i]);
             }
         }
-        
         while (!operators.empty()) {
             int numOne = number.pop();
             int numTwo = number.pop();
@@ -306,14 +321,7 @@ public class CalculatorApp extends Application{
         return number.pop();
     }
     
-    public static boolean checkPrec(char operator1, char operator2) {
-        if ((operator1 == '*' || operator1 == '/')  && (operator2 == '+' || operator2 == '-')) {
-            return false;
-        }
-        return true;
-    }
     
- 
     public static void main(String[] args) {
         Application.launch(args);
     }
