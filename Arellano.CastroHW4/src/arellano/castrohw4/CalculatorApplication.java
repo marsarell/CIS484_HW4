@@ -320,6 +320,11 @@ public class CalculatorApplication extends Application implements EventHandler<A
             txtTicker.appendText("\n");
             formula = " ";
             txtFormula.clear();
+        }else if(event.getSource() == btnClear){
+             txtFormula.clear();
+        }else if(event.getSource() == btnZero){
+            formula += btnZero.getText();
+            txtFormula.setText(formula);
         }
     }
     //methods to caluculate: 
