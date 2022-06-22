@@ -1,5 +1,7 @@
 package arellano.castrohw4;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -71,7 +73,7 @@ public class CalculatorApplication extends Application implements EventHandler<A
         txtFormula.setEditable(false);//To make text field uneditable
         txtFormula.setAlignment(Pos.CENTER_RIGHT);
         txtTicker.setEditable(false);
-        
+
         //Event Handler
         btnZero.setOnAction(this);
         btnOne.setOnAction(this);
@@ -89,8 +91,7 @@ public class CalculatorApplication extends Application implements EventHandler<A
         btnMultiply.setOnAction(this);
         btnClear.setOnAction(this);
         btnEqual.setOnAction(this);
-        btnSave.setOnAction(this);
-        btnLoad.setOnAction(this);
+     
 
         primaryPane.add(grpCalcVB, 0, 0);
         primaryPane.add(tickerVB, 6, 0);
@@ -184,10 +185,38 @@ public class CalculatorApplication extends Application implements EventHandler<A
         tickerVB.setPadding(new Insets(0, 0, 20, 0));
         txtTicker.setPrefSize(300, 400);
 
-        btnClear.setOnAction(e -> {
-            formula = " ";
-            txtFormula.clear();
+        //when save button is clicked, ticker box will save onto .dat file 
+        btnSave.setOnAction(e -> {
+            try {
+                FileOutputStream load = new FileOutputStream("ticker.dat");
+                DataOutputStream outputLoad = new DataOutputStream(load);
 
+                outputLoad.writeUTF(txtTicker.getText());
+                outputLoad.writeUTF("");
+                outputLoad.write('\n');
+
+                outputLoad.close();
+            } catch (Exception ex) {
+                System.out.println("Error:" + ex.getMessage());
+            }
+
+            //ticker.getText();
+            Alert saveAlert = new Alert(Alert.AlertType.INFORMATION);
+            saveAlert.setAlertType(Alert.AlertType.INFORMATION);
+            saveAlert.setContentText("Saved Successfully!");
+            saveAlert.show();
+        });
+
+        //when button is clicked, ticker box will load the saved history
+        btnLoad.setOnAction(e -> {
+            try {
+                FileInputStream fw = new FileInputStream("ticker.dat");
+                DataInputStream pw = new DataInputStream(fw);
+                txtTicker.setText(pw.readUTF());
+
+            } catch (Exception ex) {
+                System.out.println("Error:" + ex.getMessage());
+            }
         });
 
         Scene primaryScene = new Scene(primaryPane, 500, 250);
@@ -285,39 +314,40 @@ public class CalculatorApplication extends Application implements EventHandler<A
                 txtFormula.setText(formula);
             }
 
-        }else if(event.getSource() == btnEqual){
+        } else if (event.getSource() == btnEqual) {
             int result = calculate(txtFormula.getText());
-            txtTicker.appendText(txtFormula.getText()+" = "+result);
+            txtTicker.appendText(txtFormula.getText() + " = " + result);
             txtTicker.appendText("\n");
             formula = " ";
             txtFormula.clear();
         }
     }
-     //methods to caluculate: 
+    //methods to caluculate: 
+
     public static int formula(char operator, int y, int x) {
         switch (operator) {
             case '+':
-                return x+y;
+                return x + y;
             case '-':
-                return x-y;
+                return x - y;
             case '*':
-                return x*y;
+                return x * y;
             case '/':
-                return x/y;
+                return x / y;
             default:
                 break;
         }
         return 0;
-    }  
-    
+    }
+
     public static boolean isOperator(char operator1, char operator2) {
-        if ((operator1 == '*' || operator1 == '/' || operator1 == '+' || operator1 == '-')  
+        if ((operator1 == '*' || operator1 == '/' || operator1 == '+' || operator1 == '-')
                 && (operator2 == '*' || operator2 == '/' || operator2 == '+' || operator2 == '-')) {
             return false;
         }
         return true;
     }
-    
+
     //stacking and pushing
     public static int calculate(String result) {
         char[] input = result.toCharArray();
@@ -328,14 +358,14 @@ public class CalculatorApplication extends Application implements EventHandler<A
                 continue;
             }
             if (input[i] >= '0' && input[i] <= '9') {
-                String s= "";
+                String s = "";
                 while (i < input.length && input[i] >= '0' && input[i] <= '9') {
                     s += input[i++];
                 }
                 number.push(Integer.parseInt(s));
                 i--;
             } else if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') {
-                
+
                 while (!operators.empty() && isOperator(input[i], operators.peek())) {
                     number.push(formula(operators.pop(), number.pop(), number.pop()));
                 }
@@ -349,8 +379,5 @@ public class CalculatorApplication extends Application implements EventHandler<A
         }
         return number.pop();
     }
-    
-    
-    
 
 }
